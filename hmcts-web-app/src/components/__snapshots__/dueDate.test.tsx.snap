@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Header correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-form-group "
+  >
+    <fieldset
+      class="govuk-fieldset"
+      role="group"
+    >
+      <legend
+        class="govuk-fieldset__legend"
+      >
+        Due Date
+      </legend>
+      <div
+        class="govuk-date-input"
+        id="due-date"
+      >
+        <div
+          class="govuk-date-input__item"
+        >
+          <label
+            class="govuk-label govuk-date-input__label"
+            for="due-date-day"
+          >
+            Day
+          </label>
+          <input
+            class="govuk-input govuk-date-input__input govuk-input--width-2"
+            id="due-date-day"
+            inputmode="numeric"
+            name="day"
+            pattern="[0-9]*"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="govuk-date-input__item"
+        >
+          <label
+            class="govuk-label govuk-date-input__label"
+            for="due-date-month"
+          >
+            Month
+          </label>
+          <input
+            class="govuk-input govuk-date-input__input govuk-input--width-2"
+            id="due-date-month"
+            inputmode="numeric"
+            name="month"
+            pattern="[0-9]*"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="govuk-date-input__item"
+        >
+          <label
+            class="govuk-label govuk-date-input__label"
+            for="due-date-year"
+          >
+            Year
+          </label>
+          <input
+            class="govuk-input govuk-date-input__input govuk-input--width-4"
+            id="due-date-year"
+            inputmode="numeric"
+            name="year"
+            pattern="[0-9]*"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</DocumentFragment>
+`;

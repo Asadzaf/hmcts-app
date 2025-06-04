@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Header correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="govuk-button"
+    data-module="govuk-button"
+    type="submit"
+  >
+    Save and continue
+  </button>
+</DocumentFragment>
+`;
