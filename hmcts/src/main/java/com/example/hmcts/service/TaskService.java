@@ -39,12 +39,10 @@ public class TaskService {
             throw new IllegalArgumentException("Invalid sort direction. Must be 'ASC' or 'DESC'.");
         }
 
-        // If custom status sort is requested
         if ("status".equalsIgnoreCase(sortBy)) {
-            Pageable pageable = PageRequest.of(page, size); // No DB sort
+            Pageable pageable = PageRequest.of(page, size);
             Page<Task> taskPage = taskRepository.findAll(pageable);
 
-            // Define custom order
             List<Status> customOrder = (sortDirection == Sort.Direction.ASC)
                     ? List.of(Status.IN_PROGRESS, Status.PENDING, Status.COMPLETE, Status.INACTIVE)
                     : List.of(Status.INACTIVE, Status.COMPLETE, Status.PENDING, Status.IN_PROGRESS);
