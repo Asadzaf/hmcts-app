@@ -21,6 +21,39 @@ h2 database link : http://localhost:8080/db
 
 database login : username (hmcts) password (password)
 
+### API documentation
+
+Interactive docs (Swagger UI) : http://localhost:8080/swagger-ui.html
+
+OpenAPI spec (JSON) : http://localhost:8080/v3/api-docs
+
+| Method | Endpoint | Description | Success | Errors |
+|--------|----------|-------------|---------|--------|
+| `GET` | `/tasks` | Get all tasks, paged. Query params: `page` (default 0), `size` (default 10), `sortBy` (default `id`), `direction` (`ASC`/`DESC`) | `200` | |
+| `GET` | `/tasks/{id}` | Get a task by ID | `200` | `404` |
+| `POST` | `/tasks` | Create a task | `201` | `400` (malformed body) |
+| `PUT` | `/tasks/{id}` | Update a task's status | `200` | `400`, `404` |
+| `DELETE` | `/tasks/{id}` | Delete a task | `200` | `404` |
+
+Example create request body:
+
+```json
+{
+  "title": "Review case bundle",
+  "description": "Check documents before the hearing",
+  "status": "PENDING",
+  "dueDate": "2026-03-27T14:30"
+}
+```
+
+`status` is one of `IN_PROGRESS`, `PENDING`, `COMPLETE`, `INACTIVE`. `dueDate` is a local date and time in `yyyy-MM-ddTHH:mm` format.
+
+Example update request body:
+
+```json
+{ "status": "COMPLETE" }
+```
+
 
 ### Project Structure :
 
