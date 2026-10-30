@@ -113,7 +113,7 @@ exports[`TaskList component renders taskList correctly via snapshot 1`] = `
           <dd
             class="govuk-summary-list__value"
           >
-            2024-06-01
+            1 June 2024 at 09:30
           </dd>
         </div>
       </div>
@@ -230,7 +230,7 @@ exports[`TaskList component renders taskList correctly via snapshot 1`] = `
           <dd
             class="govuk-summary-list__value"
           >
-            2024-07-01
+            1 July 2024 at 14:05
           </dd>
         </div>
       </div>

@@ -2,6 +2,9 @@ import Task from "../types/Task";
 import '../assets/govuk-frontend/dist/govuk/govuk-frontend.min.css'
 import { NavLink } from "react-router-dom";
 
+const formatDueDate = (dueDate: string) =>
+    new Date(dueDate).toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short' });
+
 type TaskList = {
     data: Task[];
 };
@@ -44,7 +47,7 @@ const TaskList = ({ data }: TaskList) => {
                             </div>
                             <div className="govuk-summary-list__row">
                                 <dt className="govuk-summary-list__key">Due Date</dt>
-                                <dd className="govuk-summary-list__value">{item.dueDate}</dd>
+                                <dd className="govuk-summary-list__value">{formatDueDate(item.dueDate)}</dd>
                             </div>
                         </div>
                     </div>

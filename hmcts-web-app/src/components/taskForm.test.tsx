@@ -30,7 +30,7 @@ describe("TaskForm", () => {
         // Reset to default mock implementation
         mockDueDateComponent.mockImplementation(({ onDateChange }: any) => (
             <div data-testid="due-date-mock">
-                <button onClick={() => onDateChange({ day: "01", month: "01", year: "2025" })}>
+                <button onClick={() => onDateChange({ day: "01", month: "01", year: "2025", hour: "14", minute: "30" })}>
                     Set Due Date
                 </button>
             </div>
@@ -54,7 +54,7 @@ describe("TaskForm", () => {
                 title: "Test Task",
                 description: "Desc",
                 status: "IN_PROGRESS",
-                dueDate: "2024-12-31",
+                dueDate: "2024-12-31T09:00:00",
             },
         });
         expect(screen.getByDisplayValue("Test Task")).toBeDisabled();
@@ -79,7 +79,7 @@ describe("TaskForm", () => {
                 expect.objectContaining({
                     method: "POST",
                     headers: expect.any(Object),
-                    body: expect.stringContaining("New Task"),
+                    body: expect.stringContaining('"dueDate":"2025-01-01T14:30"'),
                 })
             );
             expect(mockNavigate).toHaveBeenCalledWith("/allTasks");
@@ -95,7 +95,7 @@ describe("TaskForm", () => {
                 title: "Update Task",
                 description: "Desc",
                 status: "INACTIVE",
-                dueDate: "2024-12-31",
+                dueDate: "2024-12-31T09:00:00",
             },
         });
         fireEvent.change(screen.getByLabelText("Status"), { target: { value: "COMPLETE" } });
@@ -123,7 +123,7 @@ describe("TaskForm", () => {
                 title: "Delete Task",
                 description: "Desc",
                 status: "INACTIVE",
-                dueDate: "2024-12-31",
+                dueDate: "2024-12-31T09:00:00",
             },
         });
         fireEvent.click(screen.getByRole("button", { name: /Delete Task/i }));
@@ -168,5 +168,28 @@ describe("TaskForm", () => {
         await waitFor(() => {
             expect(screen.getByText(/Please select a valid status/i)).toBeInTheDocument();
         });
+    });
+
+    it.each([
+        [{ day: "01", month: "01", year: "2025", hour: "", minute: "" }, /Complete due date and time is required/i],
+        [{ day: "01", month: "01", year: "2025", hour: "24", minute: "00" }, /Due time must be a real time/i],
+        [{ day: "01", month: "01", year: "2025", hour: "12", minute: "60" }, /Due time must be a real time/i],
+    ])("shows a due time validation error for %o", async (dueDate, message) => {
+        mockDueDateComponent.mockImplementation(({ onDateChange }: any) => (
+            <button onClick={() => onDateChange(dueDate)}>Set Due Date</button>
+        ));
+        global.fetch = jest.fn() as any;
+        renderTaskForm();
+        fireEvent.change(screen.getByLabelText("Task Title"), { target: { value: "New Task" } });
+        fireEvent.change(screen.getByLabelText("Status"), { target: { value: "IN_PROGRESS" } });
+        fireEvent.click(screen.getByText("Set Due Date"));
+        fireEvent.click(screen.getByRole("button", { name: /Create Task/i }));
+
+        await waitFor(() => {
+            expect(mockDueDateComponent).toHaveBeenLastCalledWith(
+                expect.objectContaining({ error: expect.stringMatching(message) })
+            );
+        });
+        expect(global.fetch).not.toHaveBeenCalled();
     });
 });

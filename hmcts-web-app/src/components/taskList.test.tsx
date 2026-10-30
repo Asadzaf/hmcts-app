@@ -20,14 +20,14 @@ describe("TaskList component", () => {
             title: "Test Task 1",
             description: "Description 1",
             status: "ACTIVE",
-            dueDate: "2024-06-01",
+            dueDate: "2024-06-01T09:30:00",
         },
         {
             id: 6049,
             title: "Test Task 2",
             description: "Description 2",
             status: "INACTIVE",
-            dueDate: "2024-07-01",
+            dueDate: "2024-07-01T14:05:00",
         },
     ];
 
@@ -48,8 +48,8 @@ describe("TaskList component", () => {
         expect(screen.getByText("Description 2")).toBeInTheDocument();
         expect(screen.getByText("ACTIVE")).toBeInTheDocument();
         expect(screen.getByText("INACTIVE")).toBeInTheDocument();
-        expect(screen.getByText("2024-06-01")).toBeInTheDocument();
-        expect(screen.getByText("2024-07-01")).toBeInTheDocument();
+        expect(screen.getByText("1 June 2024 at 09:30")).toBeInTheDocument();
+        expect(screen.getByText("1 July 2024 at 14:05")).toBeInTheDocument();
     });
 
     it("renders correct Update/Delete links", () => {

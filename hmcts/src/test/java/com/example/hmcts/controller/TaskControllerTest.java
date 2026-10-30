@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,8 +40,8 @@ public class TaskControllerTest {
 
     @Test
     public void test_getTasksReturnsTasksSuccessfully() throws Exception {
-        Task task1 = new Task("Task 1 title","sdf", Status.IN_PROGRESS, LocalDate.now());
-        Task task2 = new Task("Task 2 title", "sdf", Status.PENDING, LocalDate.now());
+        Task task1 = new Task("Task 1 title","sdf", Status.IN_PROGRESS, LocalDateTime.now());
+        Task task2 = new Task("Task 2 title", "sdf", Status.PENDING, LocalDateTime.now());
 
         List<Task> tasks = Arrays.asList(task1,task2);
         Page<Task> taskPage = new PageImpl<>(tasks);
@@ -63,13 +63,24 @@ public class TaskControllerTest {
 
     @Test
     public void test_getTaskById_returnsTaskSuccessfully() throws Exception {
-        Task task1 = new Task("Test title","sdf", Status.IN_PROGRESS, LocalDate.now());
+        Task task1 = new Task("Test title","sdf", Status.IN_PROGRESS, LocalDateTime.now());
 
         Mockito.when(taskService.getTaskById(1L)).thenReturn(task1);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/tasks/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test title"));
+    }
+
+    @Test
+    public void test_getTaskById_returnsDueDateWithTime() throws Exception {
+        Task task1 = new Task("Test title","sdf", Status.IN_PROGRESS, LocalDateTime.of(2025, 6, 1, 14, 30));
+
+        Mockito.when(taskService.getTaskById(1L)).thenReturn(task1);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dueDate").value("2025-06-01T14:30:00"));
     }
 
     @Test
@@ -84,7 +95,7 @@ public class TaskControllerTest {
 
     @Test
     public void test_createTask_taskCreatesSuccessfully() throws Exception {
-        Task task1 = new Task("sdfs", "sdf", Status.IN_PROGRESS, LocalDate.now());
+        Task task1 = new Task("sdfs", "sdf", Status.IN_PROGRESS, LocalDateTime.now());
 
         Mockito.doNothing().when(taskService).createTask(Mockito.any(Task.class));
 
@@ -118,7 +129,7 @@ public class TaskControllerTest {
 
     @Test
     public void test_updateTask_Successfully() throws Exception {
-        Task updatedTask = new Task("sdfs", "sdf", Status.IN_PROGRESS, LocalDate.now());
+        Task updatedTask = new Task("sdfs", "sdf", Status.IN_PROGRESS, LocalDateTime.now());
 
         TaskUpdateRequest tur = new TaskUpdateRequest();
         tur.setStatus(Status.IN_PROGRESS);

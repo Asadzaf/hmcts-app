@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -33,11 +33,11 @@ public class TaskServiceTest {
 
     @BeforeEach
     public void setup() {
-        task1 = new Task("1st Task", "1st Desc", Status.INACTIVE, LocalDate.now());
+        task1 = new Task("1st Task", "1st Desc", Status.INACTIVE, LocalDateTime.now());
         task1.setId(1L);
-        task2 = new Task("2nd Task", "2nd Desc", Status.IN_PROGRESS, LocalDate.now());
+        task2 = new Task("2nd Task", "2nd Desc", Status.IN_PROGRESS, LocalDateTime.now());
         task2.setId(2L);
-        task3 = new Task("3rd Task", "3rd Desc", Status.COMPLETE, LocalDate.now());
+        task3 = new Task("3rd Task", "3rd Desc", Status.COMPLETE, LocalDateTime.now());
         task3.setId(3L);
     }
 

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -26,9 +26,9 @@ public class Task {
     @NonNull
     private Status status;
     @NonNull
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
 
-    public Task(String title, String desc, Status status, LocalDate date) {
+    public Task(String title, String desc, Status status, LocalDateTime date) {
         this.setTitle(title);
         this.setDescription(desc);
         this.setStatus(status);

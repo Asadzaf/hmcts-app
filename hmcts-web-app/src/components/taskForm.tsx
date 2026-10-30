@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import '../assets/govuk-frontend/dist/govuk/govuk-frontend.min.css';
 import { useNavigate } from "react-router-dom";
-import DueDate from "./dueDate";
+import DueDate, { DueDateValue } from "./dueDate";
 
 type TaskForForm = {
     id: number | null;
     title: string;
     description: string | null;
     status: string;
-    dueDate: { day: string; month: string; year: string } | string;
+    dueDate: DueDateValue | string;
 }
 
 interface TaskFormProps {
@@ -16,10 +16,12 @@ interface TaskFormProps {
     isUpdate?: boolean;
 }
 
-const mapDueDate = (dueDate: string | { day: string, month: string, year: string }) => {
+const mapDueDate = (dueDate: string | DueDateValue): DueDateValue => {
     if (typeof dueDate === 'string') {
-        const [year, month, day] = dueDate.split('-');
-        return { day, month, year };
+        const [datePart, timePart = ''] = dueDate.split('T');
+        const [year, month, day] = datePart.split('-');
+        const [hour = '', minute = ''] = timePart.split(':');
+        return { day, month, year, hour, minute };
     }
     return dueDate;
 }
@@ -37,12 +39,12 @@ export const TaskForm: React.FC<TaskFormProps> = (
         title: string;
         description: string;
         status: string;
-        dueDate: { day: string; month: string; year: string };
+        dueDate: DueDateValue;
     }>({
         title: "",
         description: "",
         status: "Select a status",
-        dueDate: { day: "", month: "", year: "" }
+        dueDate: { day: "", month: "", year: "", hour: "", minute: "" }
     });
 
     useEffect(() => {
@@ -61,7 +63,7 @@ export const TaskForm: React.FC<TaskFormProps> = (
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleDateChange = (date: { day: string; month: string; year: string }) => {
+    const handleDateChange = (date: DueDateValue) => {
         setFormData({ ...formData, dueDate: { ...formData.dueDate, ...date } });
     };
 
@@ -104,14 +106,16 @@ export const TaskForm: React.FC<TaskFormProps> = (
             errors.status = "Status is required";
         }
 
-        const { day, month, year } = formData.dueDate;
-        const formattedDueDate : Date = new Date(`${year}-${month}-${day}`);
+        const { day, month, year, hour, minute } = formData.dueDate;
+        const formattedDueDate : Date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
         const earliestDate = new Date();
         earliestDate.setFullYear(earliestDate.getFullYear() - 100);
         earliestDate.setHours(0, 0, 0, 0)
         
-        if (!day || !month || !year) {
-            errors.dueDate = "Complete due date is required";
+        if (!day || !month || !year || !hour || !minute) {
+            errors.dueDate = "Complete due date and time is required";
+        } else if (Number(hour) > 23 || Number(minute) > 59) {
+            errors.dueDate = "Due time must be a real time, using the 24-hour clock";
         }
         if( formattedDueDate < earliestDate) {
             errors.dueDate = `Due date cannot be more than 100 years in the past`;
@@ -125,10 +129,12 @@ export const TaskForm: React.FC<TaskFormProps> = (
             return;
         }
 
-        // Format the date in yyyy-MM-dd format for the backend
+        // Format the date in yyyy-MM-ddTHH:mm format for the backend
         const paddedDay = formData.dueDate.day.padStart(2, '0');
         const paddedMonth = formData.dueDate.month.padStart(2, '0');
-        const formattedDate = `${formData.dueDate.year}-${paddedMonth}-${paddedDay}`;
+        const paddedHour = formData.dueDate.hour.padStart(2, '0');
+        const paddedMinute = formData.dueDate.minute.padStart(2, '0');
+        const formattedDate = `${formData.dueDate.year}-${paddedMonth}-${paddedDay}T${paddedHour}:${paddedMinute}`;
 
 
         try {
