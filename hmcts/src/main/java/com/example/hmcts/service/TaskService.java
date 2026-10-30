@@ -1,12 +1,14 @@
 package com.example.hmcts.service;
 
 import com.example.hmcts.enums.Status;
+import com.example.hmcts.exceptions.InvalidTaskException;
 import com.example.hmcts.exceptions.TaskNotFoundException;
 import com.example.hmcts.model.Task;
 import com.example.hmcts.repository.TaskRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -20,6 +22,12 @@ public class TaskService {
     }
 
     public void createTask(Task task) {
+        if (task.getDueDate() == null) {
+            throw new InvalidTaskException("Due date is required");
+        }
+        if (task.getDueDate().isBefore(LocalDateTime.now())) {
+            throw new InvalidTaskException("Due date must be in the future");
+        }
         taskRepository.save(task);
     }
 

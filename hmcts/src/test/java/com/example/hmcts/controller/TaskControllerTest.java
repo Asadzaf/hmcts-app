@@ -2,6 +2,7 @@ package com.example.hmcts.controller;
 
 import com.example.hmcts.dto.TaskUpdateRequest;
 import com.example.hmcts.enums.Status;
+import com.example.hmcts.exceptions.InvalidTaskException;
 import com.example.hmcts.exceptions.TaskNotFoundException;
 import com.example.hmcts.model.Task;
 import com.example.hmcts.service.TaskService;
@@ -106,6 +107,20 @@ public class TaskControllerTest {
                         .content(taskJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Task created successfully"));
+    }
+
+    @Test
+    public void test_createTask_returnsBadRequest_whenDueDateInPast() throws Exception {
+        Task task1 = new Task("sdfs", "sdf", Status.IN_PROGRESS, LocalDateTime.now().minusDays(1));
+
+        Mockito.doThrow(new InvalidTaskException("Due date must be in the future"))
+                .when(taskService).createTask(Mockito.any(Task.class));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(task1)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Due date must be in the future"));
     }
 
     @Test

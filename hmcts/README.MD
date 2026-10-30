@@ -31,7 +31,7 @@ OpenAPI spec (JSON) : http://localhost:8080/v3/api-docs
 |--------|----------|-------------|---------|--------|
 | `GET` | `/tasks` | Get all tasks, paged. Query params: `page` (default 0), `size` (default 10), `sortBy` (default `id`), `direction` (`ASC`/`DESC`) | `200` | |
 | `GET` | `/tasks/{id}` | Get a task by ID | `200` | `404` |
-| `POST` | `/tasks` | Create a task | `201` | `400` (malformed body) |
+| `POST` | `/tasks` | Create a task | `201` | `400` (due date missing or in the past, or malformed body) |
 | `PUT` | `/tasks/{id}` | Update a task's status | `200` | `400`, `404` |
 | `DELETE` | `/tasks/{id}` | Delete a task | `200` | `404` |
 
@@ -42,11 +42,11 @@ Example create request body:
   "title": "Review case bundle",
   "description": "Check documents before the hearing",
   "status": "PENDING",
-  "dueDate": "2026-03-27T14:30"
+  "dueDate": "2027-03-27T14:30"
 }
 ```
 
-`status` is one of `IN_PROGRESS`, `PENDING`, `COMPLETE`, `INACTIVE`. `dueDate` is a local date and time in `yyyy-MM-ddTHH:mm` format.
+`status` is one of `IN_PROGRESS`, `PENDING`, `COMPLETE`, `INACTIVE`. `dueDate` is a local date and time in `yyyy-MM-ddTHH:mm` format, and must be in the future when creating a task.
 
 Example update request body:
 

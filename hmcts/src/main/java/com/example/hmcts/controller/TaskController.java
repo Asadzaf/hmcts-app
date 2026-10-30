@@ -63,8 +63,9 @@ public class TaskController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a task", description = "Requires a title, status and due date/time (yyyy-MM-ddTHH:mm); description is optional")
+    @Operation(summary = "Create a task", description = "Requires a title, status and a future due date/time (yyyy-MM-ddTHH:mm); description is optional")
     @ApiResponse(responseCode = "201", description = "Task created")
+    @ApiResponse(responseCode = "400", description = "Due date missing or in the past, or malformed body")
     public ResponseEntity<String> createTask(@RequestBody Task task){
         logger.info("Creating task: {}", task);
         taskService.createTask(task);

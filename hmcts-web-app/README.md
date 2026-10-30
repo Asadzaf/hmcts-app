@@ -39,6 +39,6 @@ I have used the GOVUK Design System for frontend consistency.
 
 There is a component folder to hold separate components, and a pages folder for the main pages that we will navigate through.
 
-Design choices such as 100 years prior have been made with consideration that is a task management system for caseworkers, so to allow for long lengths (but not too long), I opted for 100 years.
+New tasks must have a due date and time in the future, as a past due date on a new task is almost always a typing mistake, and the due date can't be edited afterwards. Existing tasks that become overdue can still have their status updated. The API enforces the same rule.
 
 I hope you enjoy !

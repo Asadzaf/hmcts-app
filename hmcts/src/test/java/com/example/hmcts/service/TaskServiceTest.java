@@ -1,6 +1,7 @@
 package com.example.hmcts.service;
 
 import com.example.hmcts.enums.Status;
+import com.example.hmcts.exceptions.InvalidTaskException;
 import com.example.hmcts.exceptions.TaskNotFoundException;
 import com.example.hmcts.model.Task;
 import com.example.hmcts.repository.TaskRepository;
@@ -39,6 +40,34 @@ public class TaskServiceTest {
         task2.setId(2L);
         task3 = new Task("3rd Task", "3rd Desc", Status.COMPLETE, LocalDateTime.now());
         task3.setId(3L);
+    }
+
+    @Test
+    public void testCreateTask_Successfully() {
+        Task task = new Task("New Task", "Desc", Status.PENDING, LocalDateTime.now().plusDays(1));
+
+        taskService.createTask(task);
+
+        Mockito.verify(taskRepository).save(task);
+    }
+
+    @Test
+    public void testCreateTask_ThrowsException_WhenDueDateInPast() {
+        Task task = new Task("New Task", "Desc", Status.PENDING, LocalDateTime.now().minusMinutes(1));
+
+        InvalidTaskException exception = assertThrows(InvalidTaskException.class, () -> taskService.createTask(task));
+        assertEquals("Due date must be in the future", exception.getMessage());
+        Mockito.verify(taskRepository, Mockito.never()).save(Mockito.any(Task.class));
+    }
+
+    @Test
+    public void testCreateTask_ThrowsException_WhenDueDateMissing() {
+        Task task = new Task();
+        task.setTitle("New Task");
+
+        InvalidTaskException exception = assertThrows(InvalidTaskException.class, () -> taskService.createTask(task));
+        assertEquals("Due date is required", exception.getMessage());
+        Mockito.verify(taskRepository, Mockito.never()).save(Mockito.any(Task.class));
     }
 
     @Test

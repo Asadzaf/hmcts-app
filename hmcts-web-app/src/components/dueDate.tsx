@@ -54,7 +54,7 @@ const DueDate: React.FC<DueDateProps> = ({ initialDate, onDateChange, isUpdate, 
       >
         <legend className="govuk-fieldset__legend">Due date and time</legend>
         <div id="due-date-hint" className="govuk-hint">
-          For example, 27 3 2026 14 30 (use the 24-hour clock)
+          For example, 27 3 2027 14 30 (use the 24-hour clock)
         </div>
 
         {error && (

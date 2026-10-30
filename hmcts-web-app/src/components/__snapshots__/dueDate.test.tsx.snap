@@ -19,7 +19,7 @@ exports[`renders Header correctly 1`] = `
         class="govuk-hint"
         id="due-date-hint"
       >
-        For example, 27 3 2026 14 30 (use the 24-hour clock)
+        For example, 27 3 2027 14 30 (use the 24-hour clock)
       </div>
       <div
         class="govuk-date-input"

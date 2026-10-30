@@ -108,17 +108,17 @@ export const TaskForm: React.FC<TaskFormProps> = (
 
         const { day, month, year, hour, minute } = formData.dueDate;
         const formattedDueDate : Date = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
-        const earliestDate = new Date();
-        earliestDate.setFullYear(earliestDate.getFullYear() - 100);
-        earliestDate.setHours(0, 0, 0, 0)
-        
+
         if (!day || !month || !year || !hour || !minute) {
             errors.dueDate = "Complete due date and time is required";
         } else if (Number(hour) > 23 || Number(minute) > 59) {
             errors.dueDate = "Due time must be a real time, using the 24-hour clock";
-        }
-        if( formattedDueDate < earliestDate) {
-            errors.dueDate = `Due date cannot be more than 100 years in the past`;
+        } else if (formattedDueDate.getDate() !== Number(day) || formattedDueDate.getMonth() !== Number(month) - 1) {
+            // Date rolls invalid days over (31/02 becomes 03/03), so a mismatch means the date doesn't exist
+            errors.dueDate = "Due date must be a real date";
+        } else if (!isUpdate && formattedDueDate <= new Date()) {
+            // Existing tasks can go overdue and still need their status updating
+            errors.dueDate = "Due date must be in the future";
         }
         if( formData.status === "Select a status") {
             errors.status = "Please select a valid status";

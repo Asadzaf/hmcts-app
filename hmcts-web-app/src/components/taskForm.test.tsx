@@ -30,7 +30,7 @@ describe("TaskForm", () => {
         // Reset to default mock implementation
         mockDueDateComponent.mockImplementation(({ onDateChange }: any) => (
             <div data-testid="due-date-mock">
-                <button onClick={() => onDateChange({ day: "01", month: "01", year: "2025", hour: "14", minute: "30" })}>
+                <button onClick={() => onDateChange({ day: "01", month: "01", year: "2099", hour: "14", minute: "30" })}>
                     Set Due Date
                 </button>
             </div>
@@ -79,7 +79,7 @@ describe("TaskForm", () => {
                 expect.objectContaining({
                     method: "POST",
                     headers: expect.any(Object),
-                    body: expect.stringContaining('"dueDate":"2025-01-01T14:30"'),
+                    body: expect.stringContaining('"dueDate":"2099-01-01T14:30"'),
                 })
             );
             expect(mockNavigate).toHaveBeenCalledWith("/allTasks");
@@ -171,10 +171,12 @@ describe("TaskForm", () => {
     });
 
     it.each([
-        [{ day: "01", month: "01", year: "2025", hour: "", minute: "" }, /Complete due date and time is required/i],
-        [{ day: "01", month: "01", year: "2025", hour: "24", minute: "00" }, /Due time must be a real time/i],
-        [{ day: "01", month: "01", year: "2025", hour: "12", minute: "60" }, /Due time must be a real time/i],
-    ])("shows a due time validation error for %o", async (dueDate, message) => {
+        [{ day: "01", month: "01", year: "2099", hour: "", minute: "" }, /Complete due date and time is required/i],
+        [{ day: "01", month: "01", year: "2099", hour: "24", minute: "00" }, /Due time must be a real time/i],
+        [{ day: "01", month: "01", year: "2099", hour: "12", minute: "60" }, /Due time must be a real time/i],
+        [{ day: "31", month: "02", year: "2099", hour: "12", minute: "00" }, /Due date must be a real date/i],
+        [{ day: "01", month: "01", year: "2020", hour: "12", minute: "00" }, /Due date must be in the future/i],
+    ])("shows a due date validation error for %o", async (dueDate, message) => {
         mockDueDateComponent.mockImplementation(({ onDateChange }: any) => (
             <button onClick={() => onDateChange(dueDate)}>Set Due Date</button>
         ));
