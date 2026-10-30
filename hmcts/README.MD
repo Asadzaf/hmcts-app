@@ -70,7 +70,7 @@ Repository:
 A JPA repository for simple CRUD functions.
 
 Database:
-A non-persistent H2 in memory database was chosen for simplicity and ease of rerunning for the testing and assessment of this application.
+An H2 database stored in a file (`./data/hmcts.mv.db`) was chosen for simplicity: tasks persist across restarts without installing a database server. Delete the `data` folder to start fresh. Tests use a separate in-memory H2 database.
 
 Tests: 
 2 test classes, one for the controller, one for the service, allowing for integration and unit tests.
